@@ -44,26 +44,16 @@ const objectToArray = () => {
 }
 
 
-// On the first click in the page gets the data from the api
-const getAllData = async (obj) => {
-    await getCountriesData(obj)
-    await getCovidData(obj)
-    covidDataArr = await objectToArray();
-    const europeData = await getRegionData("Europe");
-    await getRegions();
-}
-
-
-// TODO: creat an array of region names
-const getRegions = async () => {
+// Create array of all the regions names
+const getRegionsNames = async () => {
     console.log(covidDataArr)
     const result = covidDataArr.reduce((previousValue, currentValue) => {
-        if (!(previousValue.includes(currentValue.region))){
+        if (!(previousValue.includes(currentValue.region))) {
             previousValue.push(currentValue.region)
         }
-         return previousValue
+        return previousValue
     }, []);
-    console.log(result)
+    return result
 }
 
 
@@ -81,6 +71,7 @@ const getRegionData = async (selectedRegion) => {
     const countriesCritical = countriesCovidData.map(x => x.critical)
     const countriesRecovered = countriesCovidData.map(x => x.recovered)
     const regionObject = {
+        region: selectedRegion,
         countriesNames: countriesNames,
         countriesDeaths: countriesDeaths,
         countriesConfirmed: countriesConfirmed,
@@ -88,11 +79,61 @@ const getRegionData = async (selectedRegion) => {
         countriesRecovered: countriesRecovered
     }
     return regionObject
+}
+
+// On the first click in the page gets the data from the api
+const getAllData = async (obj) => {
+    await getCountriesData(obj)
+    await getCovidData(obj)
+    covidDataArr = await objectToArray();
+    const regionsNamesArray = await getRegionsNames();
+    const temp =  await getRegionData(regionsNamesArray[0]);
+    console.log(temp)
 
 }
 
 
+// Create the chart
+// let chartElement = document.querySelector("#mainChart").getContext('2d');
+const chartElement = document.querySelector("#mainChart");
+
+// Chart.defaults.font.family = "Lato";
+
+
+
+// Lets try to play with real data
+
+
+const dataChart = new Chart(chartElement, {
+    type: "bar", // horizontalBar / pie/ line/ doughnut/ radar/ polarArea
+    data: {
+        labels: ["country1", "country2", "country3"],
+        datasets: [{
+            label: "confirmed",
+            data: [1000, 2000, 1500],
+            // backgroundColor: ["green", "red", "yellow"] // If we want each bar to have different color we can use array
+            backgroundColor: "pink",
+            // border: 1,
+            // borderColor: "#777",
+            // hoverBorderColor: "#000"
+        }],
+    },
+    // TODO: options is not working
+    // options: {
+    //     title: {
+    //         display: true,
+    //         text: "Confirmed Cases In Europe",
+    //         fontSize: 25
+    //     },
+    //     legend: {
+    //         display: false
+    //     }
+    // }
  
+})
+
+
+
 
 
 
