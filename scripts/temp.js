@@ -125,6 +125,7 @@ const getRegionData = async (selectedRegion) => {
 const getAllData = async (obj) => {
     await getCountriesData(obj)
     await getCovidData(obj)
+}
 
     covidDataArr = objectToArray();
     const regionsNamesArray = await getRegionsNames();
@@ -194,7 +195,7 @@ const regionButtons = document.querySelectorAll(".regions-buttons button");
 regionButtons.forEach((element) => element.addEventListener("click", regionClick))
 
 
-console.log("commit")
+
 
 
 // const regionsCovidData = {};
