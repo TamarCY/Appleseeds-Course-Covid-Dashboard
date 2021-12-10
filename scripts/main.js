@@ -23,17 +23,6 @@ const getCountriesData = async (obj) => {
             }
         }
     )
-    // data.forEach(
-    //     (country) => {
-    //         covidDataArr.push(
-    //             {
-    //                 name: country.name.common,
-    //                 region: country.region,
-    //                 code: country.cca2
-    //             })
-    //     }
-
-    // )
 
 }
 
@@ -60,38 +49,51 @@ const getAllData = async (obj) => {
     await getCountriesData(obj)
     await getCovidData(obj)
     covidDataArr = await objectToArray();
-    await getRegionData("Europe")
-    // getRegions();
+    const europeData = await getRegionData("Europe");
+    await getRegions();
 }
 
 
-// TODO: creat an array of regions
-// const getRegions = () => {
-//     const result = covidDataArr.reduce((previousValue, currentValue) => {
-//         !(previousValue.includes(currentValue))? 
-//             previousValue.push(currentValue.region):
-//             previousValue
+// TODO: creat an array of region names
+const getRegions = async () => {
+    console.log(covidDataArr)
+    const result = covidDataArr.reduce((previousValue, currentValue) => {
+        if (!(previousValue.includes(currentValue.region))){
+            previousValue.push(currentValue.region)
+        }
+         return previousValue
+    }, []);
+    console.log(result)
+}
 
-//     }, []);
-//     console.log(result)
-// }
 
 
 
 const getRegionData = async (selectedRegion) => {
     const regionData = covidDataArr.filter((country) => ((country.region === selectedRegion)));
-    const countriesInRegion = regionData.map(country => country.name);
+    const countriesNames = regionData.map(country => country.name);
     const countriesCovidData = regionData.map(country => {
         return country.covidData ? country.covidData : COVID_DATA_OBJECT
     });
-    // TODO: change to DRY
+    // TODO: change to DRY - maybe with a class?
     const countriesDeaths = countriesCovidData.map(x => x.deaths);
     const countriesConfirmed = countriesCovidData.map(x => x.confirmed)
     const countriesCritical = countriesCovidData.map(x => x.critical)
     const countriesRecovered = countriesCovidData.map(x => x.recovered)
+    const regionObject = {
+        countriesNames: countriesNames,
+        countriesDeaths: countriesDeaths,
+        countriesConfirmed: countriesConfirmed,
+        countriesCritical: countriesCritical,
+        countriesRecovered: countriesRecovered
+    }
+    return regionObject
 
-    console.log(covidDataArr)
 }
+
+
+ 
+
 
 
 getAllData(urlObject);
