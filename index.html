@@ -10,9 +10,30 @@
     
 </head>
 <body>
-    <div class="container">
-        <canvas id="mainChart"></canvas>
-    </div>
+        <div class="container">
+             <canvas id="mainChart"></canvas>
+             <div class="regions-buttons">
+                <button class="asia-button" data-region="Asia">Asia</button>
+                <button class="europe-button" data-region="Europe">Europe</button>
+                <button class="africa-button" data-region="Africa">Africa</button>   
+                <button class="america-button" data-region="America">America</button> 
+                <button class="world-button" data-region="World">World</button>   
+             </div>
+             <div class="category-buttons">
+                 <button class="confirmed" >Confirmed</button>
+                 <button class="deaths">Deaths</button>
+                 <button class="recovered">Recovered</button>
+                 <button class="critical">Critical</button>
+             </div>
+        </div>
+        <div>
+            <select name="countries" id="countries">
+                <option value="badolina">badolina</option>
+                <option value="lalalend">lalalend</option>
+
+            </select>
+        </div>
+
     <!-- TODO: move the head -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
