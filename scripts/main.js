@@ -100,6 +100,7 @@ const getRegionsNames = async () => {
 }
 
 const creatChart = (divELement, dataObject, category = "confirmed") => {
+    chartDivElement.style.display = "block"
     if (chart) {
         dataChart.destroy()
     };
@@ -139,6 +140,9 @@ const chooseCountry = () => {
     chart = false;
     categoryHeaderElement.style.display = "none";
     countryHeaderElement.innerText = selectedCountryObject.name;
+    countryHeaderElement.style.display = "block";
+
+    
 
     
 }
@@ -167,11 +171,13 @@ const regionClick = () => {
     }
 
     // Displays
+    countryHeaderElement.style.display = "none";
+    categoryHeaderElement.style.display = "block";
     countriesData.style.display = "none";
     regionHeaderElement.innerText = displayedRegion;
     categoryHeaderElement.innerText = "Confirmed"
     countriesSelect.style.display = "block";
-    countriesSelect.addEventListener("change", chooseCountry)
+    countriesSelect.addEventListener("change", chooseCountry);
 
 }
 
@@ -185,28 +191,38 @@ const categoryClick = () => {
 }
 
 const criticalClick = () => {
+    countriesData.style.display = "none";
+    countryHeaderElement.style.display = "none";
     creatChart(chartElement, regionsDataObject[regionState], "critical")
     categoryHeaderElement.display = "block"
     categoryHeaderElement.innerText = "Critical"
 
 }
 const confirmedClick = () => {
+    countriesData.style.display = "none";
+    countryHeaderElement.style.display = "none";
     creatChart(chartElement, regionsDataObject[regionState], "confirmed")
+    categoryHeaderElement.style.display = "block"
     categoryHeaderElement.innerText = "Confirmed"
-    categoryHeaderElement.display = "block"
 
 
 }
 const deathsClick = () => {
+    categoryHeaderElement.style.display = "block";
+    countriesData.style.display = "none";
+    countryHeaderElement.style.display = "none";
     creatChart(chartElement, regionsDataObject[regionState], "deaths")
-    categoryHeaderElement.display = "block"
     categoryHeaderElement.innerText = "Deaths"
+
 
 }
 const recoveredClick = () => {
+    countriesData.style.display = "none";
+    countryHeaderElement.style.display = "none";
     creatChart(chartElement, regionsDataObject[regionState], "recovered")
-    categoryHeaderElement.display = "block"
+    categoryHeaderElement.style.display = "block"
     categoryHeaderElement.innerText = "Recovered"
+
 
 }
 
@@ -271,10 +287,11 @@ const getAllData = async (obj) => {
 
 
 
-
+const chartDivElement = document.querySelector(".chart")
 const chartElement = document.querySelector("#main-chart");
 const regionButtons = document.querySelectorAll(".regions-buttons button");
 const categoryButtons = document.querySelectorAll(".category-buttons button");
+const categoryButtonsElement = document.querySelectorAll(".category-buttons");
 const criticalButton = document.querySelector(".critical")
 const confirmedButton = document.querySelector(".confirmed")
 const deathsButton = document.querySelector(".deaths")
@@ -292,29 +309,7 @@ const categoryHeaderElement = document.querySelector(".category-header")
 const countryHeaderElement = document.querySelector(".country-header")
 const optionElement = document.querySelector("#countries option")
 
-// regionButtons.forEach((element) => element.addEventListener("click", regionClick))
-
 window.addEventListener("load", getAllData)
 
 
-// If I want fetch the api on the first click on the page
-// const regionClick = (event) => {
-//     if (!isFirstClick) {
-//         getAllData(urlObject);
-//         isFirstClick = true;
-//     }
-//     regionState = event.target.dataset.region;
-// }
 
-
-// const regionsCovidData = {};
-
-// const creatRegionsCovidDataObject = async () => {
-    //     regionsNamesArray.forEach((regionName, index)=>{
-        //         let regionKey;
-        //         regionName?
-        //         regionKey = regionName:
-        //         regionKey = "undefined"+index
-        //         regionsCovidData [regionKey] =  getRegionData(regionName)
-        //     })
-        // }

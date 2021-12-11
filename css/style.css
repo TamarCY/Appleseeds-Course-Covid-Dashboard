@@ -13,7 +13,7 @@ h1, h2, h3 {
 }
 
 h2 {
-    color: #A45D5D;
+    color: #864e4e;
     margin: 0 auto;
 }
 
@@ -25,10 +25,10 @@ button {
 
  button{
     all: unset;
-    background-color: #FFC069;
     padding: 5px;
     margin: 10px;
     border-radius: 5px;
+    background-color: #EFEFEF ;
 
 }
 
@@ -37,8 +37,11 @@ button:hover{
 
 }
 
+
+
 .regions-buttons button{
-    background-color: #EFEFEF ;
+    background-color: #FFC069;
+
 }
 
 
@@ -61,14 +64,20 @@ select {
 
 .country-data div {
     font-weight: bolder;
+    width: 12%;
+    padding: 0.5rem;
+    background-color: #EFEFEF;
+    border-radius: 5px;
 }
 
-/* .category-header {
+
+.display-none {
     display: none;
-} */
+}
 
 
 
-
-
+.chart {
+    display: none;
+}
 
