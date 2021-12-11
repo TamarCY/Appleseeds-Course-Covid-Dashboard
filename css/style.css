@@ -16,3 +16,12 @@ select {
     margin-top: 10px;
 }
 
+#main-chart {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-top: 5%;
+}
+
+.country-data {
+    display: none;
+}

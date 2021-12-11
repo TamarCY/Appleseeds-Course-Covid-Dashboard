@@ -35,6 +35,8 @@ let regionState;
 
 let chart;
 
+let selectedCountryObject;
+
 // Contains object for each regin, in each object there are arrays for all the region's category of data
 const regionsDataObject = {
 }
@@ -110,9 +112,10 @@ const creatChart = (divELement, dataObject, category = "confirmed") => {
 }
 
 const chooseCountry = () => {
-    console.log(countriesObject[event.target.value])
-    
-
+    selectedCountryObject = countriesObject[event.target.value]
+    console.log(selectedCountryObject)
+    countryConfirmed.innerText = selectedCountryObject.covidData.confirmed
+    countriesData.style.display = "block"
 }
 
 // TODO: break to sub functions
@@ -223,7 +226,7 @@ const getAllData = async (obj) => {
 
 
 
-const chartElement = document.querySelector("#mainChart");
+const chartElement = document.querySelector("#main-chart");
 const regionButtons = document.querySelectorAll(".regions-buttons button");
 const categoryButtons = document.querySelectorAll(".category-buttons button");
 const criticalButton = document.querySelector(".critical")
@@ -231,6 +234,9 @@ const confirmedButton = document.querySelector(".confirmed")
 const deathsButton = document.querySelector(".deaths")
 const recoveredButton = document.querySelector(".recovered")
 const countriesSelect = document.querySelector("#countries")
+const countriesData = document.querySelector(".country-data")
+// TODO: change to array with selector all
+const countryConfirmed = document.querySelector(".country-confirmed span")
 
 // regionButtons.forEach((element) => element.addEventListener("click", regionClick))
 
