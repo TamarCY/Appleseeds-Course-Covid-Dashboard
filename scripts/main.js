@@ -157,7 +157,8 @@ const regionClick = () => {
     recoveredButton.addEventListener("click", recoveredClick)
     const namesArray = regionsDataObject[event.target.dataset.region].countriesNames;
     const codesArray = regionsDataObject[event.target.dataset.region].countriesCodes;
-    countriesSelect.innerHTML = "";
+    countriesSelect.innerHTML = '<option selected="true" disabled="disabled">Choose country</option>';
+    
     for (let i = 0; i < namesArray.length; i++){
         const element = document.createElement("option")
         element.value = codesArray[i];
@@ -224,6 +225,7 @@ const getRegionData = async (selectedRegion) => {
     const countriesRecovered = countriesCovidData.map(x => x.recovered)
     const countriesNewDeaths = countriesCovidData.map(x => x.new_recovered)
     const countriesNewConfirmed = countriesCovidData.map(x => x.new_deaths)
+    
 
     
     const regionObject = {
@@ -288,6 +290,8 @@ const countryCritical = document.querySelector(".country-critical span")
 const regionHeaderElement = document.querySelector(".region-header")
 const categoryHeaderElement = document.querySelector(".category-header")
 const countryHeaderElement = document.querySelector(".country-header")
+const optionElement = document.querySelector("#countries option")
+
 // regionButtons.forEach((element) => element.addEventListener("click", regionClick))
 
 window.addEventListener("load", getAllData)
