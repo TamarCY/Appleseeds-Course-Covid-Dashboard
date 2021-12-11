@@ -33,7 +33,11 @@ let isFirstClick;
 
 let regionState;
 
-let temp;
+let chart;
+
+// Contains object for each regin, in each object there are arrays for all the region's category of data
+const regionsDataObject = {
+}
 
 // -------------------------------------------------------------------//
 
@@ -50,7 +54,6 @@ const getCountriesData = async (obj) => {
             }
         }
     )
-    console.log(data)
     return data
 
 }
@@ -58,14 +61,12 @@ const getCountriesData = async (obj) => {
 // Fetch for covid data
 const getCovidData = async (obj) => {
     const { data: { data } } = await axios.get(obj.proxy + obj.covidAPI);
-    console.log(data)
     data.forEach((country) => {
         countriesObject[country.code].covidData = country.latest_data;
         countriesObject[country.code].covidData.new_deaths = country.today.deaths;    
         countriesObject[country.code].covidData.new_confirmed = country.today.confirmed;    
 
     })
-    console.log(countriesObject)
 }
 
 
@@ -81,7 +82,6 @@ const objectToArray = () => {
 
 // Create array of all the regions names
 const getRegionsNames = async () => {
-    console.log(covidDataArr)
     const result = covidDataArr.reduce((previousValue, currentValue) => {
         if (!(previousValue.includes(currentValue.region))) {
             previousValue.push(currentValue.region)
@@ -91,7 +91,64 @@ const getRegionsNames = async () => {
     return result
 }
 
+const creatChart = (divELement, dataObject, category="confirmed") => {
+    // console.log(dataObject)
 
+    // console.log(dataObject[category])
+    if (chart) {
+        dataChart.destroy()
+    };
+    dataChart = new Chart(divELement, {
+        type: "bar", // horizontalBar / pie/ line/ doughnut/ radar/ polarArea
+        data: {
+            labels: dataObject.countriesNames,
+            datasets: [{
+                // TODO: change to object of category names
+                label: REGIONS_COVID_HEADERS_OBJECT[category],
+                data: dataObject[category],
+                backgroundColor: "pink",
+               
+            }],
+        },
+    })
+    chart = true;
+}
+
+
+const regionClick = () => {
+  regionState = event.target.dataset.region;
+  creatChart(chartElement,regionsDataObject[event.target.dataset.region])
+      criticalButton.addEventListener("click",criticalClick)
+      confirmedButton.addEventListener("click",confirmedClick)
+      deathsButton.addEventListener("click",deathsClick)
+      recoveredButton.addEventListener("click",recoveredClick)
+      
+
+
+//   TODO: change the color of the selected regionButtons, change the columns color
+
+} 
+
+const categoryClick = () => {
+    console.log("in category click regions obj", regionsDataObject)
+    console.log("in category click regions obj[region]", regionsDataObject[regionState])
+    console.log("in category click regions obj[region].recoverd", regionsDataObject[regionState]["recovered"])
+    console.log("category", event.target.datasets)    
+    creatChart(chartElement, regionsDataObject[regionState], event.target.datasets.category)
+}
+
+const criticalClick = () => {
+    creatChart(chartElement, regionsDataObject[regionState], "critical")
+}
+const confirmedClick = () => {
+    creatChart(chartElement, regionsDataObject[regionState], "confirmed")
+}
+const deathsClick = () => {
+    creatChart(chartElement, regionsDataObject[regionState], "deaths")
+}
+const recoveredClick = () => {
+    creatChart(chartElement, regionsDataObject[regionState], "recovered")
+}
 
 // Gets a region name and returns an object with all the region's countries data  
 const getRegionData = async (selectedRegion) => {
@@ -110,15 +167,16 @@ const getRegionData = async (selectedRegion) => {
     const regionObject = {
         region: selectedRegion,
         countriesNames: countriesNames,
-        countriesDeaths: countriesDeaths,
-        countriesConfirmed: countriesConfirmed,
-        countriesCritical: countriesCritical,
-        countriesRecovered: countriesRecovered,
-        countriesNewDeaths: countriesNewDeaths,
-        countriesNewConfirmed: countriesNewConfirmed
+        deaths: countriesDeaths,
+        confirmed: countriesConfirmed,
+        critical: countriesCritical,
+        recovered: countriesRecovered,
+        newDeaths: countriesNewDeaths,
+        newConfirmed: countriesNewConfirmed
     }
     return regionObject
 }
+
 
 
 // ---------------- THE MAIN FUNCTION ----------------------------//
@@ -126,19 +184,21 @@ const getRegionData = async (selectedRegion) => {
 
 // On the first click in the page gets the data from the api
 const getAllData = async (obj) => {
-    await getCountriesData(obj)
-    await getCovidData(obj)
+    await getCountriesData(urlObject)
+    await getCovidData(urlObject)
 
     covidDataArr = objectToArray();
     const regionsNamesArray = await getRegionsNames();
 
 // TODO: change this to an object or  something dynamic or store in local storage or sub function 
-    const asiaDataObject =  await getRegionData("Asia");
-    const europeDataObject =  await getRegionData("Europe");
-    const africaDataObject =  await getRegionData("Africa");
-    const americasDataObject =  await getRegionData("Americas");
+    regionsDataObject.asia =  await getRegionData("Asia");
+    regionsDataObject.europe =  await getRegionData("Europe");
+    regionsDataObject.africa =  await getRegionData("Africa");
+    regionsDataObject.americas =  await getRegionData("Americas");
             
-    creatChart(chartElement,asiaDataObject,"countriesConfirmed")
+    // categoryButtons.forEach((element) => element.addEventListener("click", categoryClick))
+    regionButtons.forEach((element) => element.addEventListener("click", regionClick))
+    
 }
 // ------------------------------------------------------------------//
 
@@ -147,33 +207,19 @@ const getAllData = async (obj) => {
 
 
 
-const creatChart = (divELement, dataObject, category="") => {
-    console.log(dataObject)
-    const dataChart = new Chart(divELement, {
-        //TODO: media query for small screens - change to horizontal bar 
-        type: "bar", // horizontalBar / pie/ line/ doughnut/ radar/ polarArea
-        data: {
-            labels: dataObject.countriesNames,
-            datasets: [{
-                // TODO: change to object of category names
-                label: REGIONS_COVID_HEADERS_OBJECT[category],
-                data: dataObject[category],
-                backgroundColor: "pink",
-               
-            }],
-        },
-    })
-}
-
-
-
 
 
 const chartElement = document.querySelector("#mainChart");
 const regionButtons = document.querySelectorAll(".regions-buttons button");
-regionButtons.forEach((element) => element.addEventListener("click", regionClick))
-window.addEventListener("load", getAllData)
+const categoryButtons = document.querySelectorAll(".category-buttons button");
+const criticalButton = document.querySelector(".critical")
+const confirmedButton = document.querySelector(".confirmed")
+const deathsButton = document.querySelector(".deaths")
+const recoveredButton = document.querySelector(".recovered")
 
+// regionButtons.forEach((element) => element.addEventListener("click", regionClick))
+
+window.addEventListener("load", getAllData)
 
 
 // If I want fetch the api on the first click on the page
