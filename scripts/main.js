@@ -115,12 +115,18 @@ const chooseCountry = () => {
     selectedCountryObject = countriesObject[event.target.value]
     console.log(selectedCountryObject)
     countryConfirmed.innerText = selectedCountryObject.covidData.confirmed
+    countryNewConfirmed.innerText = selectedCountryObject.covidData.new_confirmed
+    countryDeaths.innerText = selectedCountryObject.covidData.deaths
+    countryNewDeaths.innerText = selectedCountryObject.covidData.new_deaths
+    countryRecovered.innerText = selectedCountryObject.covidData.recovered
+    countryCritical.innerText = selectedCountryObject.covidData.critical
     countriesData.style.display = "block"
 }
 
 // TODO: break to sub functions
 const regionClick = () => {
     regionState = event.target.dataset.region;
+    countriesData.style.display = "none"
     creatChart(chartElement, regionsDataObject[event.target.dataset.region])
     TODO: // change the next 4 events
     criticalButton.addEventListener("click", criticalClick)
@@ -235,8 +241,12 @@ const deathsButton = document.querySelector(".deaths")
 const recoveredButton = document.querySelector(".recovered")
 const countriesSelect = document.querySelector("#countries")
 const countriesData = document.querySelector(".country-data")
-// TODO: change to array with selector all
 const countryConfirmed = document.querySelector(".country-confirmed span")
+const countryNewConfirmed = document.querySelector(".country-new-confirmed span")
+const countryDeaths = document.querySelector(".country-deaths span")
+const countryNewDeaths = document.querySelector(".country-new-deaths span")
+const countryRecovered = document.querySelector(".country-recovered span")
+const countryCritical = document.querySelector(".country-critical span")
 
 // regionButtons.forEach((element) => element.addEventListener("click", regionClick))
 
