@@ -1,5 +1,5 @@
 // ------------------- GLOBAL VARIABLES ------------------------------//
-COVID_DATA_OBJECT = { confirmed: 0, deaths: 0, critical: 0, recovered: 0, new_recovered: 0, new_deaths: 0}
+COVID_DATA_OBJECT = { confirmed: 0, deaths: 0, critical: 0, recovered: 0, new_recovered: 0, new_deaths: 0 }
 
 REGIONS_COVID_HEADERS_OBJECT = {
     countriesDeaths: "Number of Deaths",
@@ -63,8 +63,8 @@ const getCovidData = async (obj) => {
     const { data: { data } } = await axios.get(obj.proxy + obj.covidAPI);
     data.forEach((country) => {
         countriesObject[country.code].covidData = country.latest_data;
-        countriesObject[country.code].covidData.new_deaths = country.today.deaths;    
-        countriesObject[country.code].covidData.new_confirmed = country.today.confirmed;    
+        countriesObject[country.code].covidData.new_deaths = country.today.deaths;
+        countriesObject[country.code].covidData.new_confirmed = country.today.confirmed;
 
     })
 }
@@ -91,10 +91,7 @@ const getRegionsNames = async () => {
     return result
 }
 
-const creatChart = (divELement, dataObject, category="confirmed") => {
-    // console.log(dataObject)
-
-    // console.log(dataObject[category])
+const creatChart = (divELement, dataObject, category = "confirmed") => {
     if (chart) {
         dataChart.destroy()
     };
@@ -103,51 +100,52 @@ const creatChart = (divELement, dataObject, category="confirmed") => {
         data: {
             labels: dataObject.countriesNames,
             datasets: [{
-                // TODO: change to object of category names
                 label: REGIONS_COVID_HEADERS_OBJECT[category],
                 data: dataObject[category],
                 backgroundColor: "pink",
-               
             }],
         },
     })
     chart = true;
 }
 
+const chooseCountry = () => {
+    console.log(countriesObject[event.target.value])
+    
+
+}
+
 // TODO: break to sub functions
 const regionClick = () => {
-  regionState = event.target.dataset.region;
-  creatChart(chartElement,regionsDataObject[event.target.dataset.region])
+    regionState = event.target.dataset.region;
+    creatChart(chartElement, regionsDataObject[event.target.dataset.region])
     TODO: // change the next 4 events
-      criticalButton.addEventListener("click",criticalClick)
-      confirmedButton.addEventListener("click",confirmedClick)
-      deathsButton.addEventListener("click",deathsClick)
-      recoveredButton.addEventListener("click",recoveredClick)
-      console.log (regionsDataObject[event.target.dataset.region].countriesNames)
-      const countriesInRegion = regionsDataObject[event.target.dataset.region].countriesNames;
-      countriesSelect.innerHTML = "";
-      countriesInRegion.forEach((country)=> {
-          console.log(country)
-          const element = document.createElement("option")
-          element.value = country;
-          element.innerText = country;
-          countriesSelect.appendChild(element);
-          console.log(element);
+    criticalButton.addEventListener("click", criticalClick)
+    confirmedButton.addEventListener("click", confirmedClick)
+    deathsButton.addEventListener("click", deathsClick)
+    recoveredButton.addEventListener("click", recoveredClick)
+    console.log(regionsDataObject[event.target.dataset.region])
+    const namesArray = regionsDataObject[event.target.dataset.region].countriesNames;
+    const codesArray = regionsDataObject[event.target.dataset.region].countriesCodes;
+    countriesSelect.innerHTML = "";
+    for (let i = 0; i < namesArray.length; i++){
+        const element = document.createElement("option")
+        element.value = codesArray[i];
+        element.innerText = namesArray[i];
+        countriesSelect.appendChild(element);
+    }
 
-      })
-      
+    countriesSelect.addEventListener("change", chooseCountry)
 
-
-//   TODO: change the color of the selected regionButtons, change the columns color
-
-} 
+//TODO: change the color of the selected regionButtons, change the columns color
+}
 
 // TODO: //understand why this is not working. and replace 
 const categoryClick = () => {
     console.log("in category click regions obj", regionsDataObject)
     console.log("in category click regions obj[region]", regionsDataObject[regionState])
-    console.log("in category click regions obj[region].recoverd", regionsDataObject[regionState]["recovered"])
-    console.log("category", event.target.datasets)    
+    console.log("in category click regions obj[region].recovered", regionsDataObject[regionState]["recovered"])
+    console.log("category", event.target.datasets)
     creatChart(chartElement, regionsDataObject[regionState], event.target.datasets.category)
 }
 
@@ -168,6 +166,7 @@ const recoveredClick = () => {
 const getRegionData = async (selectedRegion) => {
     const regionData = covidDataArr.filter((country) => ((country.region === selectedRegion)));
     const countriesNames = regionData.map(country => country.name);
+    const countriesCodes = regionData.map(country => country.code);
     const countriesCovidData = regionData.map(country => {
         return country.covidData ? country.covidData : COVID_DATA_OBJECT
     });
@@ -178,8 +177,11 @@ const getRegionData = async (selectedRegion) => {
     const countriesRecovered = countriesCovidData.map(x => x.recovered)
     const countriesNewDeaths = countriesCovidData.map(x => x.new_recovered)
     const countriesNewConfirmed = countriesCovidData.map(x => x.new_deaths)
+
+    
     const regionObject = {
         region: selectedRegion,
+        countriesCodes: countriesCodes,
         countriesNames: countriesNames,
         deaths: countriesDeaths,
         confirmed: countriesConfirmed,
@@ -196,23 +198,21 @@ const getRegionData = async (selectedRegion) => {
 // ---------------- THE MAIN FUNCTION ----------------------------//
 
 
-// On the first click in the page gets the data from the api
 const getAllData = async (obj) => {
     await getCountriesData(urlObject)
     await getCovidData(urlObject)
-
     covidDataArr = objectToArray();
     const regionsNamesArray = await getRegionsNames();
 
-// TODO: change this to an object or  something dynamic or store in local storage or sub function 
-    regionsDataObject.asia =  await getRegionData("Asia");
-    regionsDataObject.europe =  await getRegionData("Europe");
-    regionsDataObject.africa =  await getRegionData("Africa");
-    regionsDataObject.americas =  await getRegionData("Americas");
-            
+    // TODO: change this to an object or  something dynamic or store in local storage or sub function 
+    regionsDataObject.asia = await getRegionData("Asia");
+    regionsDataObject.europe = await getRegionData("Europe");
+    regionsDataObject.africa = await getRegionData("Africa");
+    regionsDataObject.americas = await getRegionData("Americas");
+
     // categoryButtons.forEach((element) => element.addEventListener("click", categoryClick))
     regionButtons.forEach((element) => element.addEventListener("click", regionClick))
-    
+
 }
 // ------------------------------------------------------------------//
 
