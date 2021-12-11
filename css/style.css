@@ -1,2 +1,18 @@
 body {
+    font-family: 'Roboto'
 }
+
+.regions-buttons, .category-buttons, .select-countries {
+    display: flex;
+    justify-content: center;
+}
+
+button {
+    margin: 8px;
+}
+
+
+select {
+    margin-top: 10px;
+}
+

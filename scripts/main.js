@@ -114,14 +114,28 @@ const creatChart = (divELement, dataObject, category="confirmed") => {
     chart = true;
 }
 
-
+// TODO: break to sub functions
 const regionClick = () => {
   regionState = event.target.dataset.region;
   creatChart(chartElement,regionsDataObject[event.target.dataset.region])
+    TODO: // change the next 4 events
       criticalButton.addEventListener("click",criticalClick)
       confirmedButton.addEventListener("click",confirmedClick)
       deathsButton.addEventListener("click",deathsClick)
       recoveredButton.addEventListener("click",recoveredClick)
+      console.log (regionsDataObject[event.target.dataset.region].countriesNames)
+      const countriesInRegion = regionsDataObject[event.target.dataset.region].countriesNames;
+      
+      countriesInRegion.forEach((country)=> {
+          console.log(country)
+          const element = document.createElement("option")
+          element.value = country;
+          element.innerText = country;
+          countriesSelect.appendChild(element)
+
+          console.log(element)
+
+      })
       
 
 
@@ -129,6 +143,7 @@ const regionClick = () => {
 
 } 
 
+// TODO: //understand why this is not working. and replace 
 const categoryClick = () => {
     console.log("in category click regions obj", regionsDataObject)
     console.log("in category click regions obj[region]", regionsDataObject[regionState])
@@ -216,6 +231,7 @@ const criticalButton = document.querySelector(".critical")
 const confirmedButton = document.querySelector(".confirmed")
 const deathsButton = document.querySelector(".deaths")
 const recoveredButton = document.querySelector(".recovered")
+const countriesSelect = document.querySelector("#countries")
 
 // regionButtons.forEach((element) => element.addEventListener("click", regionClick))
 
