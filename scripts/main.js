@@ -1,4 +1,4 @@
-
+// ------------------- GLOBAL VARIABLES ------------------------------//
 COVID_DATA_OBJECT = { confirmed: 0, deaths: 0, critical: 0, recovered: 0, new_recovered: 0, new_deaths: 0}
 
 REGIONS_COVID_HEADERS_OBJECT = {
@@ -22,9 +22,9 @@ const urlObject = {
     covidAPI: "https://corona-api.com/countries"
 }
 
+
 const countriesObject = {};
 
-// TODO: let or const?
 let covidDataArr = [];
 
 const regionsCovidData = {};
@@ -35,9 +35,10 @@ let regionState;
 
 let temp;
 
+// -------------------------------------------------------------------//
 
 
-// Fetch countries data
+// Fetch for countries data
 const getCountriesData = async (obj) => {
     const { data } = await axios.get(obj.proxy + obj.countryAPI);
     data.forEach(
@@ -54,7 +55,7 @@ const getCountriesData = async (obj) => {
 
 }
 
-// Fetch covid data
+// Fetch for covid data
 const getCovidData = async (obj) => {
     const { data: { data } } = await axios.get(obj.proxy + obj.covidAPI);
     console.log(data)
@@ -67,6 +68,8 @@ const getCovidData = async (obj) => {
     console.log(countriesObject)
 }
 
+
+// Convert the object to an array
 // TODO: check if to change to Object.values method
 const objectToArray = () => {
     const result = Object.keys(countriesObject).map(function (key) {
@@ -90,7 +93,7 @@ const getRegionsNames = async () => {
 
 
 
-// Gets a region name and returns an object with all the regions countries data  
+// Gets a region name and returns an object with all the region's countries data  
 const getRegionData = async (selectedRegion) => {
     const regionData = covidDataArr.filter((country) => ((country.region === selectedRegion)));
     const countriesNames = regionData.map(country => country.name);
@@ -135,21 +138,16 @@ const getAllData = async (obj) => {
     const africaDataObject =  await getRegionData("Africa");
     const americasDataObject =  await getRegionData("Americas");
             
-    const tempOneRejObj =  await getRegionData(regionsNamesArray[0]);
-    creatChart(chartElement,tempOneRejObj,"countriesNewConfirmed")
-
-     temp =  countriesObject.IL.covidData.deaths; 
+    creatChart(chartElement,asiaDataObject,"countriesConfirmed")
 }
-
 // ------------------------------------------------------------------//
 
-const chartElement = document.querySelector("#mainChart");
 
 
 
 
 
-const creatChart = (divELement, dataObject, category) => {
+const creatChart = (divELement, dataObject, category="") => {
     console.log(dataObject)
     const dataChart = new Chart(divELement, {
         //TODO: media query for small screens - change to horizontal bar 
@@ -168,43 +166,34 @@ const creatChart = (divELement, dataObject, category) => {
 }
 
 
-// const foo = async () => {
-//     const res = await getAllData(urlObject);
-//     console.log(res)
-// }
 
 
 
-const regionClick = (event) => {
-    if (!isFirstClick) {
-        getAllData(urlObject);
-        isFirstClick = true;
-    }
-    regionState = event.target.dataset.region;
-}
-
-// NEW CODE FROM HERE:
-
+const chartElement = document.querySelector("#mainChart");
+const regionButtons = document.querySelectorAll(".regions-buttons button");
+regionButtons.forEach((element) => element.addEventListener("click", regionClick))
 window.addEventListener("load", getAllData)
 
 
 
-
-const regionButtons = document.querySelectorAll(".regions-buttons button");
-regionButtons.forEach((element) => element.addEventListener("click", regionClick))
-
-
-console.log("commit")
+// If I want fetch the api on the first click on the page
+// const regionClick = (event) => {
+//     if (!isFirstClick) {
+//         getAllData(urlObject);
+//         isFirstClick = true;
+//     }
+//     regionState = event.target.dataset.region;
+// }
 
 
 // const regionsCovidData = {};
 
 // const creatRegionsCovidDataObject = async () => {
-//     regionsNamesArray.forEach((regionName, index)=>{
-//         let regionKey;
-//         regionName?
-//         regionKey = regionName:
-//         regionKey = "undefined"+index
-//         regionsCovidData [regionKey] =  getRegionData(regionName)
-//     })
-// }
+    //     regionsNamesArray.forEach((regionName, index)=>{
+        //         let regionKey;
+        //         regionName?
+        //         regionKey = regionName:
+        //         regionKey = "undefined"+index
+        //         regionsCovidData [regionKey] =  getRegionData(regionName)
+        //     })
+        // }
