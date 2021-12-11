@@ -125,15 +125,14 @@ const regionClick = () => {
       recoveredButton.addEventListener("click",recoveredClick)
       console.log (regionsDataObject[event.target.dataset.region].countriesNames)
       const countriesInRegion = regionsDataObject[event.target.dataset.region].countriesNames;
-      
+      countriesSelect.innerHTML = "";
       countriesInRegion.forEach((country)=> {
           console.log(country)
           const element = document.createElement("option")
           element.value = country;
           element.innerText = country;
-          countriesSelect.appendChild(element)
-
-          console.log(element)
+          countriesSelect.appendChild(element);
+          console.log(element);
 
       })
       
