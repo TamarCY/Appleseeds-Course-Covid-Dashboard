@@ -33,7 +33,13 @@ let isFirstClick;
 
 let regionState;
 
+let displayedRegion;
+
+let categoryState;
+
 let chart;
+
+let dataChart;
 
 let selectedCountryObject;
 
@@ -98,42 +104,57 @@ const creatChart = (divELement, dataObject, category = "confirmed") => {
         dataChart.destroy()
     };
     dataChart = new Chart(divELement, {
-        type: "bar", // horizontalBar / pie/ line/ doughnut/ radar/ polarArea
+        type: "bar", 
         data: {
             labels: dataObject.countriesNames,
             datasets: [{
                 label: REGIONS_COVID_HEADERS_OBJECT[category],
                 data: dataObject[category],
-                backgroundColor: "pink",
+                backgroundColor: "#A45D5D",
             }],
         },
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                    
+                }
+            }
+        }
     })
     chart = true;
 }
 
 const chooseCountry = () => {
+    chartElement.style.display.none;
     selectedCountryObject = countriesObject[event.target.value]
-    console.log(selectedCountryObject)
     countryConfirmed.innerText = selectedCountryObject.covidData.confirmed
     countryNewConfirmed.innerText = selectedCountryObject.covidData.new_confirmed
     countryDeaths.innerText = selectedCountryObject.covidData.deaths
     countryNewDeaths.innerText = selectedCountryObject.covidData.new_deaths
     countryRecovered.innerText = selectedCountryObject.covidData.recovered
     countryCritical.innerText = selectedCountryObject.covidData.critical
-    countriesData.style.display = "block"
+    countriesData.style.display = "flex";
+    dataChart.destroy();
+    chart = false;
+    categoryHeaderElement.style.display = "none";
+    countryHeaderElement.innerText = selectedCountryObject.name;
+
+    
 }
 
 // TODO: break to sub functions
 const regionClick = () => {
     regionState = event.target.dataset.region;
-    countriesData.style.display = "none"
+    displayedRegion = regionState.charAt(0).toUpperCase() + regionState.slice(1)
+    
+
     creatChart(chartElement, regionsDataObject[event.target.dataset.region])
     TODO: // change the next 4 events
     criticalButton.addEventListener("click", criticalClick)
     confirmedButton.addEventListener("click", confirmedClick)
     deathsButton.addEventListener("click", deathsClick)
     recoveredButton.addEventListener("click", recoveredClick)
-    console.log(regionsDataObject[event.target.dataset.region])
     const namesArray = regionsDataObject[event.target.dataset.region].countriesNames;
     const codesArray = regionsDataObject[event.target.dataset.region].countriesCodes;
     countriesSelect.innerHTML = "";
@@ -144,12 +165,16 @@ const regionClick = () => {
         countriesSelect.appendChild(element);
     }
 
+    // Displays
+    countriesData.style.display = "none";
+    regionHeaderElement.innerText = displayedRegion;
+    categoryHeaderElement.innerText = "Confirmed"
+    countriesSelect.style.display = "block";
     countriesSelect.addEventListener("change", chooseCountry)
 
-//TODO: change the color of the selected regionButtons, change the columns color
 }
 
-// TODO: //understand why this is not working. and replace 
+// TODO: //understand why this is not working. and replace the 4 click functions 
 const categoryClick = () => {
     console.log("in category click regions obj", regionsDataObject)
     console.log("in category click regions obj[region]", regionsDataObject[regionState])
@@ -160,15 +185,28 @@ const categoryClick = () => {
 
 const criticalClick = () => {
     creatChart(chartElement, regionsDataObject[regionState], "critical")
+    categoryHeaderElement.display = "block"
+    categoryHeaderElement.innerText = "Critical"
+
 }
 const confirmedClick = () => {
     creatChart(chartElement, regionsDataObject[regionState], "confirmed")
+    categoryHeaderElement.innerText = "Confirmed"
+    categoryHeaderElement.display = "block"
+
+
 }
 const deathsClick = () => {
     creatChart(chartElement, regionsDataObject[regionState], "deaths")
+    categoryHeaderElement.display = "block"
+    categoryHeaderElement.innerText = "Deaths"
+
 }
 const recoveredClick = () => {
     creatChart(chartElement, regionsDataObject[regionState], "recovered")
+    categoryHeaderElement.display = "block"
+    categoryHeaderElement.innerText = "Recovered"
+
 }
 
 // Gets a region name and returns an object with all the region's countries data  
@@ -247,7 +285,9 @@ const countryDeaths = document.querySelector(".country-deaths span")
 const countryNewDeaths = document.querySelector(".country-new-deaths span")
 const countryRecovered = document.querySelector(".country-recovered span")
 const countryCritical = document.querySelector(".country-critical span")
-
+const regionHeaderElement = document.querySelector(".region-header")
+const categoryHeaderElement = document.querySelector(".category-header")
+const countryHeaderElement = document.querySelector(".country-header")
 // regionButtons.forEach((element) => element.addEventListener("click", regionClick))
 
 window.addEventListener("load", getAllData)

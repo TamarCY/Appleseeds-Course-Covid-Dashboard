@@ -7,21 +7,68 @@ body {
     justify-content: center;
 }
 
+h1, h2, h3 {
+    text-align: center;
+    color: #4A403A;
+}
+
+h2 {
+    color: #A45D5D;
+    margin: 0 auto;
+}
+
 button {
     margin: 8px;
 }
 
 
+
+ button{
+    all: unset;
+    background-color: #FFC069;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 5px;
+
+}
+
+button:hover{
+    filter: brightness(90%);
+
+}
+
+.regions-buttons button{
+    background-color: #EFEFEF ;
+}
+
+
 select {
     margin-top: 10px;
+    display: none;
 }
 
 #main-chart {
     margin-left: 10%;
     margin-right: 10%;
-    margin-top: 5%;
 }
+
 
 .country-data {
     display: none;
+    justify-content: space-around;
+    margin-top: 2rem;
 }
+
+.country-data div {
+    font-weight: bolder;
+}
+
+/* .category-header {
+    display: none;
+} */
+
+
+
+
+
+
